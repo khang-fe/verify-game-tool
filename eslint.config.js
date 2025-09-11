@@ -22,6 +22,7 @@ export default tseslint.config([
     rules: {
       'prettier/prettier': 'off',
       'react/prop-types': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ]);
