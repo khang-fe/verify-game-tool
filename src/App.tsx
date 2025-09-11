@@ -143,43 +143,41 @@ function App() {
           </CardContent>
         </Card>
 
-        <div className="flex flex-col items-center mt-4">
+        <div className="flex flex-col items-center my-4">
           <Separator className="my-2" />
           <span className="text-sm text-center break-words">
-            If you have a report code from the game, you can paste it here to
+            If you have a report code from the game, you can paste it below to
             verify Fair Code
           </span>
           <Separator className="my-2" />
         </div>
 
-        <div className="grid w-full max-w-md items-center gap-3 mt-4">
-          <div className="grid w-full max-w-md items-center gap-3">
-            <div className="flex justify-between w-full">
-              <Label htmlFor="reportCode" className="text-lg">
-                Report Code:{' '}
-              </Label>
-              <Button
-                onClick={() => PasteButton('reportCode')}
-                type="submit"
-                variant="outline"
-              >
-                <Copy className="h-4 w-4"></Copy>
-                <span className="text-sm">Paste</span>
-              </Button>
-            </div>
-
-            <Textarea
-              onChange={e => setReportCode(e.target.value)}
-              value={reportCode}
-              placeholder={'Paste report code here...'}
-              id="reportCode"
-              className="h-[140px] w-full max-w-full"
-            />
-
-            <Button type="submit" variant="outline">
-              <span className="text-sm">Verify Link</span>
+        <div className="grid w-full items-center gap-3">
+          <div className="flex justify-between w-full">
+            <Label htmlFor="reportCode" className="text-lg">
+              Report Code:{' '}
+            </Label>
+            <Button
+              onClick={() => PasteButton('reportCode')}
+              type="submit"
+              variant="outline"
+            >
+              <Copy className="h-4 w-4"></Copy>
+              <span className="text-sm">Paste</span>
             </Button>
           </div>
+
+          <Textarea
+            onChange={e => setReportCode(e.target.value)}
+            value={reportCode}
+            placeholder={'Paste report code here...'}
+            id="reportCode"
+            className="h-[140px] w-full max-w-full"
+          />
+
+          <Button type="submit" variant="outline">
+            <span className="text-sm">Verify Link</span>
+          </Button>
         </div>
       </div>
       <Toaster position="top-center" />
