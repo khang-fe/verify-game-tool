@@ -18,6 +18,7 @@ function App() {
   const [merkleRoot, setMerkleRoot] = useState<string>('');
   const [fairCode, setFairCode] = useState<string>('');
   const [reportCode, setReportCode] = useState<string>('');
+  const [result, setResult] = useState<any>(null);
 
   const PasteButton = async (inputField: string) => {
     const clipboardData = await navigator.clipboard.readText();
@@ -55,6 +56,94 @@ function App() {
     setMerkleRoot(e.target.value);
   };
 
+  // const handleUpload = async () => {
+  //   if (!file) return;
+
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+
+  //   try {
+  //     const res = await fetch('https://proof.t16z.com/api/upload', {
+  //       method: 'POST',
+  //       body: formData,
+  //     });
+
+  //     if (!res.ok) {
+  //       throw new Error(`HTTP ${res.status}`);
+  //     }
+
+  //     const data = await res.json();
+  //     setResult(data);
+  //     setError('');
+  //   } catch (err: any) {
+  //     console.error(err);
+  //     setError(err.message);
+  //   }
+  // };
+
+  const uploadFile = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await fetch('https://proof.t16z.com/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!res.ok) throw new Error('Upload failed');
+    return res.json();
+  };
+
+  function hexToUint8Array(hex: string) {
+    hex = hex.trim();
+    if (hex.startsWith('0x')) hex = hex.slice(2);
+    if (hex.length % 2 !== 0) throw new Error('Invalid hex string');
+
+    const arr = new Uint8Array(hex.length / 2);
+    for (let i = 0; i < hex.length; i += 2) {
+      arr[i / 2] = parseInt(hex.slice(i, i + 2), 16);
+    }
+    return arr;
+  }
+
+  async function uploadHexString(hexString: string) {
+    const uint8Array = hexToUint8Array(hexString);
+
+    const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
+    const file = new File([blob], 'quote.bin', {
+      type: 'application/octet-stream',
+    });
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await fetch('https://proof.t16z.com/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!res.ok) {
+      throw new Error('Upload failed');
+    }
+    return res.json();
+  }
+
+  const handleUpload = async () => {
+    try {
+      const res = await uploadHexString(reportCode);
+      console.log('Upload response:', res);
+      if (res && res.url) {
+        toast.success('Upload successful');
+        setResult(res);
+        window.open(res.url, '_blank');
+      } else {
+        toast.error('Invalid response from server');
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <div className="mx-auto w-full flex justify-center gap-4 py-4">
@@ -65,7 +154,7 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1 className="!text-3xl text-center">Verify Game Tool</h1>
+      <h1 className="!text-3xl text-center mt-4">Verify Game Tool</h1>
       <div className="container mt-10">
         <Card>
           <CardContent>
@@ -175,7 +264,7 @@ function App() {
             className="h-[140px] w-full max-w-full"
           />
 
-          <Button type="submit" variant="outline">
+          <Button onClick={handleUpload} type="submit" variant="outline">
             <span className="text-sm">Verify Link</span>
           </Button>
         </div>
