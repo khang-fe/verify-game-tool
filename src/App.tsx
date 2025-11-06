@@ -20,6 +20,8 @@ function App() {
   const [reportCode, setReportCode] = useState<string>('');
   const [result, setResult] = useState<any>(null);
 
+  console.log('result', result);
+
   const PasteButton = async (inputField: string) => {
     const clipboardData = await navigator.clipboard.readText();
     if (!clipboardData) {
@@ -54,44 +56,6 @@ function App() {
   };
   const onChangeMerkleRoot = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMerkleRoot(e.target.value);
-  };
-
-  // const handleUpload = async () => {
-  //   if (!file) return;
-
-  //   const formData = new FormData();
-  //   formData.append('file', file);
-
-  //   try {
-  //     const res = await fetch('https://proof.t16z.com/api/upload', {
-  //       method: 'POST',
-  //       body: formData,
-  //     });
-
-  //     if (!res.ok) {
-  //       throw new Error(`HTTP ${res.status}`);
-  //     }
-
-  //     const data = await res.json();
-  //     setResult(data);
-  //     setError('');
-  //   } catch (err: any) {
-  //     console.error(err);
-  //     setError(err.message);
-  //   }
-  // };
-
-  const uploadFile = async (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const res = await fetch('https://proof.t16z.com/api/upload', {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (!res.ok) throw new Error('Upload failed');
-    return res.json();
   };
 
   function hexToUint8Array(hex: string) {
@@ -147,10 +111,10 @@ function App() {
   return (
     <>
       <div className="mx-auto w-full flex justify-center gap-4 py-4">
-        <a href="https://vite.dev" target="_blank">
+        <a href="https://vite.dev" target="_blank" rel="noopener noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
-        <a href="https://react.dev" target="_blank">
+        <a href="https://react.dev" target="_blank" rel="noopener noreferrer">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
